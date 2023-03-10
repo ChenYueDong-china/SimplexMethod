@@ -11,43 +11,43 @@ public class Main {
 
     public static void main(String[] args) {
 
-        //10.1
-//        double[][] A = {
-//                {2, -1, 3, 1, 0},
-//                {1, 2, 4, 0, 1}
-//        };
-//        double[] b = {30, 40};
-//        double[] maxZ = {4, 2, 8, 0,-MMethod.M};
-//        simplexAlgorithm(maxZ, A, b);
-
-        //10.2
+        //10.1 大M法
         double[][] A = {
                 {2, -1, 3, 1, 0},
                 {1, 2, 4, 0, 1}
         };
         double[] b = {30, 40};
-        double[] maxZ1 = {0, 0, 0, -1, -1};
-        double[] maxZ2 = {4, 2, 8, 0, 0};
+        double[] maxZ = {4, 2, 8, 0,-MMethod.M};
+        simplexAlgorithm(maxZ, A, b);
 
-        for (int i = 0; i < 2; i++) {
-            if (i == 1) {
-                //分开一下
-                split();
+        //10.2 两阶段法
+//        double[][] A = {
+//                {2, -1, 3, 1, 0},
+//                {1, 2, 4, 0, 1}
+//        };
+//        double[] b = {30, 40};
+//        double[] maxZ1 = {0, 0, 0, -1, -1};
+//        double[] maxZ2 = {4, 2, 8, 0, 0};
+//
+//        for (int i = 0; i < 2; i++) {
+//            if (i == 1) {
+//                //分开一下
+//                split();
+//
+//                for (int j = 0; j < resultX.size()-b.length; j++) {
+//                    if(resultX.get(resultX.size()-j-1)!=0){
+//                        System.out.println("无最优解");
+//                        return;
+//                    }
+//                }
+//                simplexAlgorithm(maxZ2, A, b);
+//            } else {
+//                simplexAlgorithm(maxZ1, A, b);
+//            }
+//        }
 
-                for (int j = 0; j < resultX.size()-b.length; j++) {
-                    if(resultX.get(resultX.size()-j-1)!=0){
-                        System.out.println("无最优解");
-                        return;
-                    }
-                }
-                simplexAlgorithm(maxZ2, A, b);
-            } else {
-                simplexAlgorithm(maxZ1, A, b);
-            }
-        }
 
-
-        //9.2
+        //9.2 单纯型法
 //        double[][] A = {
 //                {4, 5, -2, 1, 0},
 //                {1, -2, 1, 0, 1}
@@ -124,11 +124,12 @@ public class Main {
                 sigma[i] -= c_B[j] * A[j][i];
             }
         }
-
+        //debugPrint(A, b, c_B, x_B, theta, currentNegativeZValue, sigma);
 
         for (int i = 0; i < 1000; i++) {
             //是否获得最优解判断
             if (allLeqZero(sigma)) {
+                debugPrint(A, b, c_B, x_B, theta, currentNegativeZValue, sigma);
                 System.out.println("获得最优解");
                 return 1;
             }
@@ -151,6 +152,8 @@ public class Main {
                 theta[j] = b[j] / A[j][pivotPosition[1]];
             }
 
+            debugPrint(A, b, c_B, x_B, theta, currentNegativeZValue, sigma);
+
             //求主元y轴位置
             pivotPosition[0] = Utils.min(theta);
 
@@ -169,7 +172,6 @@ public class Main {
             //更新sigma,此时无需再减去所有的，减去入基那一行即可。直接迭代，与书上不同
             updateSigma(A, pivotPosition, sigma);
 
-            debugPrint(A, b, c_B, x_B, theta, currentNegativeZValue, sigma);
         }
 
         return 0;
